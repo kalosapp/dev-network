@@ -4,6 +4,8 @@ const config = require("config");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
+const Post = require("../../models/Post");
+const Users = require("../../models/Users");
 const { check, validationResult } = require("express-validator");
 
 // @route  GET api/profile/me
@@ -18,7 +20,7 @@ router.get("/me", auth, async (req, res) => {
     if (!profile) {
       res.status(400).json({ msg: "There is no profile for this user" });
     }
-    res.json({ profile });
+    res.json(profile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -59,7 +61,7 @@ router.post(
 
     // Build profile object
     const profileField = {};
-
+    try {
     profileField.user = req.user.id;
     if (company) profileField.company = company;
     if (website) profileField.website = website;
@@ -68,7 +70,7 @@ router.post(
     if (status) profileField.status = status;
     if (githubusername) profileField.githubusername = githubusername;
     if (skills) {
-      profileField.skills = skills.split(",").map((skill) => skill.trim());
+      profileField.skills = Array.isArray(skills) ? skills: skills.split(',').map((skill) => ' ' + skill.trim());
     }
 
     // Build social Object
@@ -79,7 +81,7 @@ router.post(
     if (instagram) profileField.social.instagram = instagram;
     if (linkedin) profileField.social.linkedin = linkedin;
 
-    try {
+    
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {
         // Update
@@ -143,10 +145,12 @@ router.get("/user/:user_id", async (req, res) => {
 // @access private
 router.delete("/", auth, async (req, res) => {
   try {
+    // Remove User Post
+    await Post.deleteMany({ user: req.user.id });
     // Remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
     // Remove user
-    await Profile.findOneAndRemove({ _id: req.user.id });
+    await Users.findOneAndRemove({ _id: req.user.id });
     res.json({ msg: "User Deleted" });
   } catch (err) {
     console.error(err.message);
