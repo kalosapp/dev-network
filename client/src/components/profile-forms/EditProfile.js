@@ -45,7 +45,7 @@ const EditProfile = ({
       linkedin: loading || !profile.linkedin ? '' : profile.linkedin, 
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [loading, getCurrentProfile]);
 
   const {
     company,
