@@ -51,7 +51,7 @@ const Profile = ({
                 <h2 className="text-primary">Education</h2>
                 {profile.education.length > 0 ? (
                   profile.education.map(education => (
-                    <ProfileEducation key={education._id} experience={education} />
+                    <ProfileEducation key={education._id} education={education} />
                   ))
                 ) : (<h4>No Education Credentials</h4>)}
               </div>
@@ -68,7 +68,7 @@ const Profile = ({
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  auth: PropTypes.bool.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

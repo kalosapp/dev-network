@@ -6,6 +6,7 @@ import ProfileItem from "./ProfileItem";
 import { getProfiles } from "../../actions/profile";
 
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
+
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
@@ -13,7 +14,7 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
   return (
     <Fragment>
       {loading ? (
-        Spinner
+        <Spinner />
       ) : (
         <Fragment>
           <h1 className="large text-primary">Developers</h1>
